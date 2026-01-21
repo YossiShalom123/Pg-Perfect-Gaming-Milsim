@@ -21,6 +21,63 @@ body{
   overflow-x:hidden;
 }
 
+/* ====== INTRO SCREEN ====== */
+#intro{
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle at center,#300000,#050000);
+  z-index:9999;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+#intro .intro-logo{
+  width:160px;
+  height:160px;
+  border-radius:24px;
+  background:url("PGLOGOGIF.gif") center/cover no-repeat;
+  box-shadow:0 0 60px red;
+  animation:spinIntro 6s linear infinite;
+}
+
+#intro h1{
+  margin-top:30px;
+  font-size:42px;
+  letter-spacing:4px;
+  text-shadow:0 0 20px red, 0 0 40px white;
+  animation:pulseText 2s infinite;
+  color:white;
+}
+
+/* פס טעינה */
+#progressBar{
+  margin-top:50px;
+  width:80%;
+  max-width:400px;
+  height:20px;
+  border:2px solid red;
+  border-radius:10px;
+  overflow:hidden;
+}
+#progress{
+  width:0%;
+  height:100%;
+  background:linear-gradient(90deg, white, red);
+}
+
+/* אנימציות */
+@keyframes spinIntro{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
+}
+@keyframes pulseText{
+  0%,100%{text-shadow:0 0 20px red, 0 0 40px white;}
+  50%{text-shadow:0 0 35px red, 0 0 60px white;}
+}
+
+/* ====== CANVAS EFFECTS ====== */
 #effectCanvas{
   position:fixed;
   inset:0;
@@ -28,13 +85,416 @@ body{
   pointer-events:none;
 }
 
-/* לוגו GIF מרובע עם פינות מעוגלות */
+/* ====== LOGO ====== */
 .logo-wrapper{margin-top:40px;z-index:10}
 .logo{
   width:140px;height:140px;
-  border-radius:20px; /* פינות מעוגלות */
+  border-radius:20px;
   border:4px solid red;
   background:url("PGLOGOGIF.gif") center/cover no-repeat;
+  box-shadow:0 0 40px rgba(255,0,0,.7);
+  cursor:pointer;
+  animation:spinLogo 20s linear infinite;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.logo:hover,
+.logo:active{
+  transform:scale(1.2);
+  box-shadow:0 0 55px red;
+}
+@keyframes spinLogo{
+  0%{transform:rotate(0deg);}
+  100%{transform:rotate(360deg);}
+}
+
+header{text-align:center;max-width:800px;z-index:10;padding:20px}
+header h1{font-size:44px;margin:20px 0;text-shadow:0 0 15px red;}
+header p{color:#ffb3b3;font-size:18px;text-shadow:0 0 8px rgba(255,0,0,.5);}
+
+.separator{
+  width:120px;height:3px;background:red;
+  margin:60px 0;border-radius:10px;z-index:10;
+}
+
+/* כרטיסיות */
+.section{padding:60px 20px;text-align:center;max-width:1100px;z-index:10}
+.section h2{color:red;font-size:34px;margin-bottom:40px;text-shadow:0 0 10px red;}
+.cards{display:flex;justify-content:center;gap:30px;flex-wrap:wrap}
+
+.card{
+  width:280px;
+  background:rgba(255,0,0,0.25);
+  border:1px solid rgba(255,0,0,.5);
+  border-radius:18px;
+  padding:30px;
+  box-shadow:0 0 25px rgba(255,0,0,.35);
+  cursor:pointer;
+  transition:.3s, box-shadow .3s;
+}
+.card:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 55px red;
+}
+.card h3{color:red;margin-bottom:12px}
+.card p{color:#ffd6d6;line-height:1.7}
+
+.training{border-color:#ff7b7b}
+.combat{border-color:red}
+
+/* VS */
+.vs-container{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:30px;
+  flex-wrap:wrap;
+}
+.vs{
+  font-size:56px;
+  font-weight:800;
+  color:white;
+  text-shadow:0 0 20px red;
+  animation:vsPulse 2s infinite;
+  cursor:pointer;
+}
+@keyframes vsPulse{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.15)}
+  100%{transform:scale(1)}
+}
+
+/* לוח זמנים */
+.schedule-list{
+  list-style:none;
+  max-width:420px;
+  margin:auto;
+  position:relative;
+}
+.schedule-list li{
+  padding:15px;
+  margin-bottom:10px;
+  border-radius:12px;
+  font-weight:bold;
+  position:relative;
+}
+.schedule-list .training{background:rgba(255,120,120,.15);border:1px solid #ff7b7b}
+.schedule-list .combat{background:rgba(255,0,0,.2);border:1px solid red}
+.schedule-list .night{
+  background:linear-gradient(45deg,darkred,red);
+  box-shadow:0 0 30px red;
+}
+
+/* טיימר */
+#timer{
+  position:relative; /* בתוך הלוח */
+  top:0;
+  left:0;
+  transform:none;
+  margin-bottom:20px;
+  font-size:24px;
+  font-weight:bold;
+  color:white;
+  text-shadow:0 0 15px red;
+  z-index:10;
+  text-align:center;
+}
+
+/* קישורים צד לצד */
+.external-section h2{
+  color:red;
+  font-size:36px;
+  margin-bottom:30px;
+  text-shadow:0 0 15px rgba(255,0,0,.7);
+  text-align:center;
+}
+
+.links-container{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:20px;
+  max-width:600px;
+  margin:auto 0 60px 0;
+}
+
+.btn{
+  display:block;
+  padding:16px 24px;
+  font-size:18px;
+  font-weight:bold;
+  color:white;
+  background:linear-gradient(45deg,darkred,red);
+  border-radius:30px;
+  text-decoration:none;
+  text-align:center;
+  box-shadow:0 0 25px red;
+  transition:transform .3s, box-shadow .3s, filter .3s;
+}
+
+.btn:hover{
+  transform:scale(1.05) translateY(-2px);
+  box-shadow:0 0 55px red;
+  filter:brightness(1.2);
+}
+
+.btn-discord{
+  font-size:20px;
+  padding:18px 30px;
+}
+
+/* Footer */
+footer{
+  padding:40px 20px;
+  background:#050000;
+  color:#ff8c8c;
+  width:100%;
+  text-align:center;
+  z-index:10;
+  line-height:2;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="effectCanvas"></canvas>
+
+<!-- INTRO -->
+<div id="intro">
+  <div class="intro-logo"></div>
+  <h1>PG MILSIM</h1>
+  <div id="progressBar"><div id="progress"></div></div>
+</div>
+
+<div class="logo-wrapper">
+  <div class="logo"></div>
+</div>
+
+<header>
+  <h1>PG - Perfect Gaming</h1>
+  <p>שרת RolePlay מלחמתי אינטנסיבי המבוסס על טקטיקה, פיקוד ומשמעת מלאה.</p>
+</header>
+
+<div class="separator"></div>
+
+<section class="section">
+  <h2>תיאור המשחק</h2>
+  <div class="vs-container">
+    <div class="card combat">
+      <h3>ארגון PG</h3>
+      <p>
+        ארגון לוחם הפועל במבצעים חשאיים, שליטה אזורית,
+        פשיטות מתוכננות ועבודת צוות מדויקת.
+      </p>
+    </div>
+    <div class="vs">VS</div>
+    <div class="card training">
+      <h3>צה״ל</h3>
+      <p>
+        כוח צבאי סדור עם פיקוד ברור, משמעת גבוהה,
+        הגנה, התקפה וניהול לחימה מאורגן.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="separator"></div>
+
+<section class="section">
+  <h2>מערכות וחוקים</h2>
+  <div class="cards">
+    <div class="card training">
+      <h3>RolePlay מלא</h3>
+      <p>
+        שמירה מוחלטת על דמות, החלטות ריאליסטיות
+        ועמידה בנהלים לאורך כל המשחק.
+      </p>
+    </div>
+    <div class="card combat">
+      <h3>מערכת לחימה</h3>
+      <p>
+        קרבות ירי ריאליסטיים, מבצעים טקטיים,
+        פציעות והשלכות אמיתיות לכל פעולה.
+      </p>
+    </div>
+    <div class="card">
+      <h3>ניהול השרת</h3>
+      <p>
+        הנהלה פעילה, אכיפה ברורה,
+        שמירה על סדר ורמה גבוהה.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="separator"></div>
+
+<section class="section">
+  <h2>⏱ לוח זמנים – אימונים ולחימה</h2>
+  <div id="timer">--:--</div> <!-- מופיע מעל לוח הזמנים -->
+  <ul class="schedule-list">
+    <li class="training">11:00 – אימון</li>
+    <li class="combat">12:00 – לחימה</li>
+    <li class="training">13:00 – אימון</li>
+    <li class="combat">14:00 – לחימה</li>
+    <li class="training">15:00 – אימון</li>
+    <li class="combat">16:00 – לחימה</li>
+    <li class="training">17:00 – אימון</li>
+    <li class="combat">18:00 – לחימה</li>
+    <li class="combat">19:00 – לחימה</li>
+    <li class="combat">20:00 – לחימה</li>
+    <li class="training">21:00 – אימון</li>
+    <li class="night">22:00 – עד הבוקר לחימה ללא הגבלה</li>
+  </ul>
+</section>
+
+<div class="separator"></div>
+
+<section class="external-section">
+  <h2>קישורים</h2>
+  <div class="links-container">
+    <a class="btn btn-discord" href="https://discord.gg/epE6e2T4W8" target="_blank">שרת דיסקורד</a>
+    <a class="btn" href="https://osublo3211-gif.github.io/perfectgaming-unban/?v=3" target="_blank">UnBan</a>
+    <a class="btn" href="https://my.israelgives.org/he/campaign/pgmilsim" target="_blank">תרומות</a>
+  </div>
+</section>
+
+<footer>
+© Pg - Perfect Gaming | Milsim | PUBLIC<br>
+נבנה על ידי Yossi Shalom / Oz
+</footer>
+
+<script>
+// ============ CANVAS ============
+const canvas=document.getElementById("effectCanvas");
+const ctx=canvas.getContext("2d");
+function resizeCanvas(){
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+}
+window.addEventListener("resize",resizeCanvas);
+resizeCanvas();
+
+// שלג
+const snow=[];
+for(let i=0;i<200;i++){
+  snow.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    r:Math.random()*2+1,
+    s:Math.random()*0.6+0.3
+  });
+}
+
+// ברקים
+let lightning=[],last=0;
+let screenShake=0;
+function createLightning(){
+  let x=Math.random()*canvas.width,y=0,path=[];
+  while(y<canvas.height){y+=15;x+=Math.random()*30-15;path.push({x,y})}
+  lightning.push({path,life:20});
+  screenShake=5; // פחות רעידה
+}
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // שלג
+  snow.forEach(s=>{
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle="rgba(255,255,255,.8)";
+    ctx.fill();
+    s.y+=s.s;
+    if(s.y>canvas.height) s.y=0;
+  });
+
+  // ברקים
+  if(Date.now()-last>2000+Math.random()*1000){
+    createLightning();
+    last=Date.now();
+  }
+
+  lightning.forEach((l,i)=>{
+    ctx.beginPath();
+    ctx.moveTo(l.path[0].x,l.path[0].y);
+    l.path.forEach(p=>ctx.lineTo(p.x,p.y));
+    ctx.strokeStyle="rgba(255,255,255,.8)";
+    ctx.lineWidth=2;
+    ctx.stroke();
+    l.life--;
+    if(l.life<=0) lightning.splice(i,1);
+  });
+
+  // אפקט רעידת מסך
+  if(screenShake>0){
+    const dx=(Math.random()-0.5)*screenShake*2;
+    const dy=(Math.random()-0.5)*screenShake*2;
+    canvas.style.transform=`translate(${dx}px, ${dy}px)`;
+    screenShake--;
+  } else {
+    canvas.style.transform='translate(0,0)';
+  }
+
+  requestAnimationFrame(draw);
+}
+draw();
+
+// ============ PROGRESS BAR ============
+let progress=0;
+const progressBar=document.getElementById("progress");
+const interval=setInterval(()=>{
+  progress++;
+  progressBar.style.width=progress+'%';
+  if(progress>=100){
+    clearInterval(interval);
+    document.getElementById("intro").style.transition="opacity 1s";
+    document.getElementById("intro").style.opacity=0;
+    setTimeout(()=>document.getElementById("intro").remove(),1000);
+  }
+},50);
+
+// ============ TIMER לפי לוח הזמנים ============
+const timerEl=document.getElementById("timer");
+
+// לוח זמנים של האימונים והלחימה בשעות
+const schedule=[
+  {hour:11,type:'training'},
+  {hour:12,type:'combat'},
+  {hour:13,type:'training'},
+  {hour:14,type:'combat'},
+  {hour:15,type:'training'},
+  {hour:16,type:'combat'},
+  {hour:17,type:'training'},
+  {hour:18,type:'combat'},
+  {hour:19,type:'combat'},
+  {hour:20,type:'combat'},
+  {hour:21,type:'training'},
+  {hour:22,type:'night'}
+];
+
+function updateTimer(){
+  const now=new Date();
+  const currentHour=now.getHours();
+  const currentMinute=now.getMinutes();
+  // מוצאים את האירוע הבא
+  let nextEvent=schedule.find(e=>e.hour>currentHour) || schedule[0]; // אם עברנו את כל הלוח, לוקחים את הראשון למחר
+  let targetHour=nextEvent.hour;
+  let targetDay=now.getDate();
+  if(nextEvent.hour<=currentHour) targetDay+=1; // אם זה למחר
+  const target=new Date(now.getFullYear(), now.getMonth(), targetDay, targetHour,0,0);
+  let remaining=Math.floor((target-now)/1000);
+  const minutes=Math.floor(remaining/60).toString().padStart(2,'0');
+  const seconds=(remaining%60).toString().padStart(2,'0');
+  timerEl.textContent=`${minutes}:${seconds} עד ${nextEvent.type === 'training' ? 'אימון' : 'לחימה'}`;
+}
+updateTimer();
+setInterval(updateTimer,1000);
+
+</script>
+
+</body>
+</html>  background:url("PGLOGOGIF.gif") center/cover no-repeat;
   box-shadow:0 0 40px rgba(255,0,0,.7);
   cursor:pointer;
   animation:spinLogo 20s linear infinite; /* סיבוב איטי */
