@@ -25,6 +25,7 @@ body{
 #intro{
   position:fixed;
   inset:0;
+  background:radial-gradient(circle at center,#300000,#050000);
   z-index:9999;
   display:flex;
   flex-direction:column;
@@ -32,29 +33,22 @@ body{
   justify-content:center;
 }
 
-#introCanvas{
-  position:absolute;
-  inset:0;
-  z-index:0;
-}
-
-#introContent{
-  position:relative;
-  z-index:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  height:100%;
-}
-
-#intro .intro-logo-wrapper{
+/* מסגרת זוהרת ללוגו */
+.intro-logo-wrapper {
   width:180px;
   height:180px;
-  border:4px solid red;
   border-radius:30px;
   padding:10px;
-  box-shadow:0 0 60px red;
+  background:rgba(255,0,0,0.3);
+  box-shadow:0 0 50px red, 0 0 80px rgba(255,0,0,0.5);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  animation:glowLogo 2s ease-in-out infinite alternate;
+}
+@keyframes glowLogo {
+  0% { box-shadow:0 0 50px red, 0 0 80px rgba(255,0,0,0.5); }
+  100% { box-shadow:0 0 70px #ff6666, 0 0 100px rgba(255,0,0,0.7); }
 }
 
 #intro .intro-logo{
@@ -62,46 +56,46 @@ body{
   height:160px;
   border-radius:24px;
   background:url("PGLOGOGIF.gif") center/cover no-repeat;
+  box-shadow:0 0 60px red;
   animation:spinIntro 6s linear infinite;
 }
 
 #intro h1{
-  margin-top:20px;
+  margin-top:30px;
   font-size:42px;
   letter-spacing:4px;
   text-shadow:0 0 20px red, 0 0 40px white;
   animation:pulseText 2s infinite;
   color:white;
-  text-align:center;
 }
 
-/* פס טעינה */
+/* פס טעינה עם אחוזים */
 #progressBar{
-  margin-top:50px;
+  margin-top:30px;
   width:80%;
   max-width:400px;
-  height:20px;
+  height:25px;
   border:2px solid red;
-  border-radius:10px;
+  border-radius:15px;
   overflow:hidden;
   position:relative;
 }
-
 #progress{
   width:0%;
   height:100%;
   background:linear-gradient(90deg, white, red);
-  transition:width 0.05s;
+  transition:width 0.05s linear;
 }
-
 #progressPercent{
   position:absolute;
-  top:50%;
+  top:0;
   left:50%;
-  transform:translate(-50%,-50%);
-  font-weight:bold;
+  transform:translateX(-50%);
   color:white;
-  text-shadow:0 0 10px red;
+  font-weight:bold;
+  font-size:16px;
+  line-height:25px;
+  text-shadow:0 0 8px red;
 }
 
 /* אנימציות */
@@ -223,7 +217,7 @@ header p{color:#ffb3b3;font-size:18px;text-shadow:0 0 8px rgba(255,0,0,.5);}
 
 /* טיימר */
 #timer{
-  position:relative; 
+  position:relative; /* בתוך הלוח */
   top:0;
   left:0;
   transform:none;
@@ -298,16 +292,13 @@ footer{
 
 <!-- INTRO -->
 <div id="intro">
-  <canvas id="introCanvas"></canvas>
-  <div id="introContent">
-    <div class="intro-logo-wrapper">
-      <div class="intro-logo"></div>
-    </div>
-    <h1>PG MILSIM</h1>
-    <div id="progressBar">
-      <div id="progress"></div>
-      <span id="progressPercent">0%</span>
-    </div>
+  <div class="intro-logo-wrapper">
+    <div class="intro-logo"></div>
+  </div>
+  <h1>PG MILSIM</h1>
+  <div id="progressBar">
+    <div id="progress"></div>
+    <span id="progressPercent">0%</span>
   </div>
 </div>
 
@@ -410,91 +401,17 @@ footer{
 </footer>
 
 <script>
-// ============ INTRO CANVAS BACKGROUND ========
-const introCanvas=document.getElementById("introCanvas");
-const introCtx=introCanvas.getContext("2d");
-
-function resizeIntroCanvas(){
-  introCanvas.width=window.innerWidth;
-  introCanvas.height=window.innerHeight;
-}
-window.addEventListener("resize",resizeIntroCanvas);
-resizeIntroCanvas();
-
-const sparks=[];
-for(let i=0;i<120;i++){
-  sparks.push({
-    x:Math.random()*introCanvas.width,
-    y:Math.random()*introCanvas.height,
-    r:Math.random()*2+1,
-    s:Math.random()*0.3+0.1,
-    opacity:Math.random()*0.5+0.3
-  });
-}
-
-let gradientOffset=0;
-function drawIntroBackground(){
-  gradientOffset+=0.5;
-  const grad=introCtx.createLinearGradient(0,0,introCanvas.width,introCanvas.height);
-  grad.addColorStop(0,'#300000');
-  grad.addColorStop(0.5,`rgba(255,0,0,0.3)`);
-  grad.addColorStop(1,'#050000');
-  
-  introCtx.fillStyle=grad;
-  introCtx.fillRect(0,0,introCanvas.width,introCanvas.height);
-  
-  sparks.forEach(s=>{
-    introCtx.beginPath();
-    introCtx.arc(s.x,s.y,s.r,0,Math.PI*2);
-    introCtx.fillStyle=`rgba(255,255,255,${s.opacity})`;
-    introCtx.fill();
-    s.y-=s.s;
-    if(s.y<0) s.y=introCanvas.height;
-  });
-  
-  requestAnimationFrame(drawIntroBackground);
-}
-drawIntroBackground();
-
-// ============ PROGRESS BAR עם אחוזים ו-3 שניות טעינה ============
-let progress=0;
-const progressBar=document.getElementById("progress");
-const progressPercent=document.getElementById("progressPercent");
-const duration=3000; // 3 שניות
-const steps=100;
-const intervalTime=duration/steps;
-
-const interval=setInterval(()=>{
-  progress++;
-  progressBar.style.width=progress+'%';
-  progressPercent.textContent=progress+'%';
-  if(progress>=100){
-    clearInterval(interval);
-    document.getElementById("intro").style.transition="opacity 1s";
-    document.getElementById("intro").style.opacity=0;
-    setTimeout(()=>document.getElementById("intro").remove(),1000);
-  }
-},intervalTime);
-
-// ============ EFFECT CANVAS (שלג וברקים) ============
+// ============ CANVAS ============
 const canvas=document.getElementById("effectCanvas");
 const ctx=canvas.getContext("2d");
-function resizeCanvas(){
-  canvas.width=window.innerWidth;
-  canvas.height=window.innerHeight;
-}
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
 window.addEventListener("resize",resizeCanvas);
 resizeCanvas();
 
 // שלג
 const snow=[];
 for(let i=0;i<200;i++){
-  snow.push({
-    x:Math.random()*canvas.width,
-    y:Math.random()*canvas.height,
-    r:Math.random()*2+1,
-    s:Math.random()*0.6+0.3
-  });
+  snow.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+1,s:Math.random()*0.6+0.3});
 }
 
 // ברקים
@@ -509,8 +426,6 @@ function createLightning(){
 
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  // שלג
   snow.forEach(s=>{
     ctx.beginPath();
     ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
@@ -519,13 +434,7 @@ function draw(){
     s.y+=s.s;
     if(s.y>canvas.height) s.y=0;
   });
-
-  // ברקים
-  if(Date.now()-last>2000+Math.random()*1000){
-    createLightning();
-    last=Date.now();
-  }
-
+  if(Date.now()-last>2000+Math.random()*1000){createLightning();last=Date.now();}
   lightning.forEach((l,i)=>{
     ctx.beginPath();
     ctx.moveTo(l.path[0].x,l.path[0].y);
@@ -536,26 +445,63 @@ function draw(){
     l.life--;
     if(l.life<=0) lightning.splice(i,1);
   });
-
   if(screenShake>0){
     const dx=(Math.random()-0.5)*screenShake*2;
     const dy=(Math.random()-0.5)*screenShake*2;
     canvas.style.transform=`translate(${dx}px, ${dy}px)`;
     screenShake--;
-  } else {
-    canvas.style.transform='translate(0,0)';
-  }
-
+  } else canvas.style.transform='translate(0,0)';
   requestAnimationFrame(draw);
 }
 draw();
 
-// ============ TIMER לפי לוח הזמנים ============
+// ===== PROGRESS BAR עם אחוזים 3 שניות =====
+let progress=0;
+const progressBar=document.getElementById("progress");
+const progressPercent=document.getElementById("progressPercent");
+const totalDuration=3000;
+const steps=100;
+const intervalTime=totalDuration/steps;
+
+const progressInterval=setInterval(()=>{
+  progress++;
+  progressBar.style.width=progress+'%';
+  progressPercent.textContent=progress+'%';
+  if(progress>=100){
+    clearInterval(progressInterval);
+    const intro=document.getElementById("intro");
+    intro.style.transition="opacity 0.5s";
+    intro.style.opacity=0;
+    setTimeout(()=>intro.remove(),500);
+  }
+}, intervalTime);
+
+// ===== TIMER לפי לוח הזמנים =====
 const timerEl=document.getElementById("timer");
 const schedule=[
-  {hour:11,type:'training'},
-  {hour:12,type:'combat'},
-  {hour:13,type:'training'},
-  {hour:14,type:'combat'},
-  {hour:15,type:'training'},
-  {hour:16,type:'combat
+  {hour:11,type:'training'},{hour:12,type:'combat'},
+  {hour:13,type:'training'},{hour:14,type:'combat'},
+  {hour:15,type:'training'},{hour:16,type:'combat'},
+  {hour:17,type:'training'},{hour:18,type:'combat'},
+  {hour:19,type:'combat'},{hour:20,type:'combat'},
+  {hour:21,type:'training'},{hour:22,type:'night'}
+];
+
+function updateTimer(){
+  const now=new Date();
+  const currentHour=now.getHours();
+  const nextEvent=schedule.find(e=>e.hour>currentHour)||schedule[0];
+  let targetDay=now.getDate();
+  if(nextEvent.hour<=currentHour) targetDay+=1;
+  const target=new Date(now.getFullYear(), now.getMonth(), targetDay, nextEvent.hour,0,0);
+  let remaining=Math.floor((target-now)/1000);
+  const minutes=Math.floor(remaining/60).toString().padStart(2,'0');
+  const seconds=(remaining%60).toString().padStart(2,'0');
+  timerEl.textContent=`${minutes}:${seconds} עד ${nextEvent.type==='training'?'אימון':'לחימה'}`;
+}
+updateTimer();
+setInterval(updateTimer,1000);
+</script>
+
+</body>
+  </html>
