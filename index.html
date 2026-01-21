@@ -33,7 +33,7 @@ body{
   justify-content:center;
 }
 
-/* מסגרת זוהרת ללוגו */
+/* מסגרת זוהרת + סיבוב */
 .intro-logo-wrapper {
   width:180px;
   height:180px;
@@ -44,8 +44,14 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  animation:glowLogo 2s ease-in-out infinite alternate;
+  animation:spinWrapper 6s linear infinite, glowLogo 2s ease-in-out infinite alternate;
 }
+
+@keyframes spinWrapper {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 @keyframes glowLogo {
   0% { box-shadow:0 0 50px red, 0 0 80px rgba(255,0,0,0.5); }
   100% { box-shadow:0 0 70px #ff6666, 0 0 100px rgba(255,0,0,0.7); }
@@ -57,7 +63,7 @@ body{
   border-radius:24px;
   background:url("PGLOGOGIF.gif") center/cover no-repeat;
   box-shadow:0 0 60px red;
-  animation:spinIntro 6s linear infinite;
+  /* הלוגו עצמו לא מסתובב – מסתובבת המסגרת */
 }
 
 #intro h1{
@@ -99,10 +105,6 @@ body{
 }
 
 /* אנימציות */
-@keyframes spinIntro{
-  from{transform:rotate(0deg);}
-  to{transform:rotate(360deg);}
-}
 @keyframes pulseText{
   0%,100%{text-shadow:0 0 20px red, 0 0 40px white;}
   50%{text-shadow:0 0 35px red, 0 0 60px white;}
@@ -138,6 +140,7 @@ body{
   100%{transform:rotate(360deg);}
 }
 
+/* שאר האתר נשאר כפי שהיה */
 header{text-align:center;max-width:800px;z-index:10;padding:20px}
 header h1{font-size:44px;margin:20px 0;text-shadow:0 0 15px red;}
 header p{color:#ffb3b3;font-size:18px;text-shadow:0 0 8px rgba(255,0,0,.5);}
@@ -421,7 +424,7 @@ function createLightning(){
   let x=Math.random()*canvas.width,y=0,path=[];
   while(y<canvas.height){y+=15;x+=Math.random()*30-15;path.push({x,y})}
   lightning.push({path,life:20});
-  screenShake=5; // פחות רעידה
+  screenShake=5;
 }
 
 function draw(){
@@ -504,4 +507,4 @@ setInterval(updateTimer,1000);
 </script>
 
 </body>
-  </html>
+</html>
