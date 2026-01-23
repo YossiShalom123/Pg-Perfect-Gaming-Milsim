@@ -176,11 +176,23 @@ function updateSchedule() {
         }
         listEl.appendChild(li);
     });
+    
     let currentEvent = scheduleData.find(e => e.h === curH);
     let timerText = "";
+
     if (currentEvent) {
         if (currentEvent.l === "לחימה ללא הגבלה") {
-            timerText = "לחימה ללא הגבלה פעילה";
+            // חישוב זמן עד 11:00 בבוקר למחרת
+            let target = new Date();
+            target.setHours(11, 0, 0, 0);
+            if (now.getHours() >= 11) {
+                target.setDate(target.getDate() + 1);
+            }
+            const diff = Math.floor((target - now) / 1000);
+            const h = Math.floor(diff/3600).toString().padStart(2,'0');
+            const m = Math.floor((diff%3600)/60).toString().padStart(2,'0');
+            const s = (diff%60).toString().padStart(2,'0');
+            timerText = `${h}:${m}:${s} עד אימון (11:00)`;
         } else {
             let endH = curH;
             for (let i = scheduleData.findIndex(e => e.h === curH); i < scheduleData.length; i++) {
@@ -188,7 +200,7 @@ function updateSchedule() {
                     endH = scheduleData[i].h;
                 } else { break; }
             }
-            const target = new Date(); target.setHours(endH + 1, 0, 0);
+            const target = new Date(); target.setHours(endH + 1, 0, 0, 0);
             const diff = Math.floor((target - now) / 1000);
             if(diff <= 0) { timerText = "מעדכן..."; }
             else {
@@ -201,13 +213,23 @@ function updateSchedule() {
     } else {
         let nextEv = scheduleData.find(e => e.h > curH);
         if (nextEv) {
-            const target = new Date(); target.setHours(nextEv.h, 0, 0);
+            const target = new Date(); target.setHours(nextEv.h, 0, 0, 0);
             const diff = Math.floor((target - now) / 1000);
             const h = Math.floor(diff/3600).toString().padStart(2,'0');
             const m = Math.floor((diff%3600)/60).toString().padStart(2,'0');
             const s = (diff%60).toString().padStart(2,'0');
             timerText = `${h}:${m}:${s} עד ${nextEv.l}`;
-        } else { timerText = "אין אירועים קרובים"; }
+        } else {
+            // אם אחרי 22:00 ואין אירוע (מקרה קצה), יראה זמן עד 11:00
+            let target = new Date();
+            target.setHours(11, 0, 0, 0);
+            target.setDate(target.getDate() + 1);
+            const diff = Math.floor((target - now) / 1000);
+            const h = Math.floor(diff/3600).toString().padStart(2,'0');
+            const m = Math.floor((diff%3600)/60).toString().padStart(2,'0');
+            const s = (diff%60).toString().padStart(2,'0');
+            timerText = `${h}:${m}:${s} עד אימון`;
+        }
     }
     document.getElementById("timer").textContent = timerText;
 }
